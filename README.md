@@ -138,5 +138,5 @@ This project aims to eventually replace the existing `pdagent` project, but with
         - [ ] Signed packages.
 - [ ] `pdagent-integrations` support.
     - [x] `pd-nagios`
-    - [ ] `pd-sensu`
+    - [x] `pd-sensu`
     - [ ] `pd-zabbix`
