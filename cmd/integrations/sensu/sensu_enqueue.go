@@ -104,14 +104,14 @@ func buildDedupKey(cmdInput sensuCommandInput) (string, error) {
 		return cmdInput.incidentKey, nil
 	}
 
-	clientName, isClientNameString := cmdutil.GetNestedStringField(cmdInput.checkResult, "client.name")
-	checkName, isCheckNameString := cmdutil.GetNestedStringField(cmdInput.checkResult, "check.name")
+	clientName, okClient := cmdutil.GetNestedStringField(cmdInput.checkResult, "client", "name")
+	checkName, okCheck := cmdutil.GetNestedStringField(cmdInput.checkResult, "check", "name")
 
-	if isClientNameString && isCheckNameString {
+	if okClient && okCheck {
 		return fmt.Sprintf("%v/%v", clientName, checkName), nil
 	}
 
-	if id, isIdPresent := cmdutil.GetNestedStringField(cmdInput.checkResult, "id"); isIdPresent {
+	if id, ok := cmdutil.GetNestedStringField(cmdInput.checkResult, "id"); ok {
 		return id, nil
 	}
 
@@ -119,7 +119,7 @@ func buildDedupKey(cmdInput sensuCommandInput) (string, error) {
 }
 
 func buildSummary(dedupKey string, cmdInput sensuCommandInput) (string, error) {
-	if output, outputPresent := cmdutil.GetNestedStringField(cmdInput.checkResult, "check.output"); outputPresent {
+	if output, ok := cmdutil.GetNestedStringField(cmdInput.checkResult, "check", "output"); ok {
 		return fmt.Sprintf("%v : %v", dedupKey, output), nil
 	}
 

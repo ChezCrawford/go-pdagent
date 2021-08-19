@@ -1,22 +1,19 @@
 package cmdutil
 
-import "strings"
-
-func GetNestedStringField(inputMap map[string]interface{}, selector string) (string, bool) {
-	selectors := strings.Split(selector, ".")
-	currentMap := inputMap
+func GetNestedStringField(input map[string]interface{}, selectors ...string) (string, bool) {
+	node := input
 	for index, key := range selectors {
-		if value, ok := currentMap[key]; ok {
+		if nextNode, ok := node[key]; ok {
 			if index+1 == len(selectors) {
-				result, isResultString := value.(string)
-				return result, isResultString
-			} else if mapVal, isMapVal := value.(map[string]interface{}); isMapVal {
-				currentMap = mapVal
+				result, ok := nextNode.(string)
+				return result, ok
+			} else if mapVal, ok := nextNode.(map[string]interface{}); ok {
+				node = mapVal
 			} else {
-				return "", false
+				break
 			}
 		} else {
-			return "", false
+			break
 		}
 	}
 	return "", false
